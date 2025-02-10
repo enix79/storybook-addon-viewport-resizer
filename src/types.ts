@@ -1,4 +1,5 @@
-export interface Result {
-  divs: DOMRect[];
-  styled: DOMRect[];
+export interface AddonState {
+  state: "playing" | "paused";
+  startWidth: number;
+  endWidth: number;
 }

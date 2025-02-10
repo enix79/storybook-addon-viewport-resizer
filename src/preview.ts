@@ -11,18 +11,20 @@
 import type { ProjectAnnotations, Renderer } from "storybook/internal/types";
 
 import { KEY } from "./constants";
-import { withGlobals } from "./withGlobals";
-import { withRoundTrip } from "./withRoundTrip";
-
+import { withAddonDecorator } from "./withAddonDecorator";
 /**
  * Note: if you want to use JSX in this file, rename it to `preview.tsx`
  * and update the entry prop in tsup.config.ts to use "src/preview.tsx",
  */
 
 const preview: ProjectAnnotations<Renderer> = {
-  decorators: [withGlobals, withRoundTrip],
+  decorators: [withAddonDecorator],
   initialGlobals: {
-    [KEY]: false,
+    [KEY]: {
+      state: "paused",
+      startWidth: 150,
+      endWidth: 1200,
+    },
   },
 };
 

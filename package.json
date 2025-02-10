@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "An addon for testing responsive designs",
   "keywords": [
-    "storybook-addons", "storybook-addons"
+    "storybook-addons",
+    "storybook-addons"
   ],
   "repository": {
     "type": "git",
@@ -23,7 +24,6 @@
       "import": "./dist/preview.js",
       "require": "./dist/preview.cjs"
     },
-    "./preset": "./dist/preset.cjs",
     "./manager": "./dist/manager.js",
     "./package.json": "./package.json"
   },
@@ -91,9 +91,6 @@
     ],
     "previewEntries": [
       "src/preview.ts"
-    ],
-    "nodeEntries": [
-      "src/preset.ts"
     ]
   },
   "storybook": {
@@ -102,5 +99,6 @@
       "react"
     ],
     "icon": "https://user-images.githubusercontent.com/321738/63501763-88dbf600-c4cc-11e9-96cd-94adadc2fd72.png"
-  }
+  },
+  "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a"
 }
