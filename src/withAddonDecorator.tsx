@@ -1,16 +1,13 @@
-import React, { ReactNode, useCallback } from "react";
+import React, { ReactNode } from "react";
 import {
   makeDecorator,
   useEffect,
   useState,
   useGlobals,
+  useCallback,
 } from "storybook/internal/preview-api";
 
-import {
-  useAddonState,
-  useStorybookState,
-} from "storybook/internal/manager-api";
-import { ADDON_ID, KEY } from "./constants";
+import { KEY } from "./constants";
 import { AddonState } from "./types";
 
 export const withAddonDecorator = makeDecorator({
@@ -18,34 +15,40 @@ export const withAddonDecorator = makeDecorator({
   parameterName: "viewport-resizer",
   skipIfNoParametersOrOptions: false,
   wrapper: (getStory, context, { parameters }) => {
-    const [globals] = useGlobals();
-    const { state, startWidth, endWidth } = globals[KEY] as AddonState;
-    console.log(globals[KEY]);
-    const [currentWidth, setCurrentWidth] = useState(startWidth);
+    const [globals, setGlobals] = useGlobals();
+    const addonGlobals = globals[KEY] as AddonState;
+    const { state, startWidth, endWidth, step, delay, repeat } = addonGlobals;
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-    console.log(currentWidth);
-    console.log(intervalId);
+    const [currentWidth, setCurrentWidth] = useState<number>(startWidth);
     const story = getStory(context) as ReactNode;
-    const increasCurrentWidth = () =>
-      setCurrentWidth((prev) => {
-        if (prev >= endWidth) {
-          return startWidth;
-        } else {
-          return prev + 10;
-        }
-      });
+    const increaseCurrentWidth = () => setCurrentWidth((prev) => prev + step);
+
     useEffect(() => {
-      console.log("useEffect");
+      if (currentWidth >= endWidth) {
+        if (repeat) {
+          setCurrentWidth(startWidth);
+        } else {
+          clearInterval(intervalId as NodeJS.Timeout);
+          setIntervalId(null);
+          setGlobals({
+            [KEY]: {
+              ...globals[KEY],
+              state: "paused",
+            },
+          });
+        }
+      }
+    }, [currentWidth, endWidth, repeat]);
+
+    useEffect(() => {
       if (state === "paused") {
         if (intervalId) {
-          console.log("clearing interval");
           clearInterval(intervalId);
           setIntervalId(null);
-          console.log("interval cleared");
         }
       } else if (state === "playing") {
         if (!intervalId) {
-          const id = setInterval(increasCurrentWidth, 500);
+          const id = setInterval(increaseCurrentWidth, delay);
           setIntervalId(id);
         }
       }
@@ -54,9 +57,9 @@ export const withAddonDecorator = makeDecorator({
       };
     }, [state]);
 
-    useEffect(() => {
-      setCurrentWidth(startWidth);
-    }, [startWidth]);
+    // useEffect(() => {
+    //   setCurrentWidth(startWidth);
+    // }, [startWidth]);
 
     return <div style={{ width: `${currentWidth}px` }}>{story}</div>;
   },

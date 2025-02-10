@@ -11,6 +11,7 @@ interface PanelProps {
 
 export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
   const [globals, setGlobals] = useGlobals();
+  const { startWidth, endWidth, step, delay, repeat } = globals[KEY];
 
   const onPlay = useCallback(() => {
     setGlobals({
@@ -34,7 +35,7 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
     setGlobals({
       [KEY]: {
         ...globals[KEY],
-        startWidth: 150,
+        currentWidth: 150,
       },
     });
   }, []);
@@ -44,6 +45,19 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
       <button onClick={onPlay}>Play</button>
       <button onClick={onPause}>Pause</button>
       <button onClick={onReset}>Reset</button>
+
+      <label>
+        Start width
+        <input type="text" value={startWidth} />
+      </label>
+      <label>
+        End width
+        <input type="text" value={endWidth} />
+      </label>
+      <label>
+        Repeat
+        <input type="checkbox" value={repeat} />
+      </label>
     </AddonPanel>
   );
 });
