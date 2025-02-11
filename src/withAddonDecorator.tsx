@@ -15,53 +15,50 @@ export const withAddonDecorator = makeDecorator({
   parameterName: "viewport-resizer",
   skipIfNoParametersOrOptions: false,
   wrapper: (getStory, context, { parameters }) => {
-    const [globals, setGlobals] = useGlobals();
-    const addonGlobals = globals[KEY] as AddonState;
-    const { state, startWidth, endWidth, step, delay, repeat } = addonGlobals;
-    const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-    const [currentWidth, setCurrentWidth] = useState<number>(startWidth);
     const story = getStory(context) as ReactNode;
-    const increaseCurrentWidth = () => setCurrentWidth((prev) => prev + step);
+    const [globals, updateGlobals] = useGlobals();
+    const addonGlobals = globals[KEY] as AddonState;
+    console.log(addonGlobals);
+    const { state, startWidth, endWidth, currentWidth, step, delay, repeat } =
+      addonGlobals;
 
     useEffect(() => {
-      if (currentWidth >= endWidth) {
-        if (repeat) {
-          setCurrentWidth(startWidth);
+      let timeoutId: NodeJS.Timeout;
+      if (state === "playing") {
+        if (currentWidth >= endWidth) {
+          if (repeat) {
+            updateGlobals({
+              [KEY]: {
+                ...globals[KEY],
+                currentWidth: startWidth,
+              },
+            });
+          } else {
+            updateGlobals({
+              [KEY]: {
+                ...globals[KEY],
+                state: "paused",
+              },
+            });
+          }
         } else {
-          clearInterval(intervalId as NodeJS.Timeout);
-          setIntervalId(null);
-          setGlobals({
-            [KEY]: {
-              ...globals[KEY],
-              state: "paused",
-            },
-          });
+          const incrementWidth = () =>
+            updateGlobals({
+              [KEY]: {
+                ...globals[KEY],
+                currentWidth: currentWidth + step,
+              },
+            });
+          timeoutId = setTimeout(incrementWidth, delay);
         }
+        return () => clearTimeout(timeoutId);
       }
-    }, [currentWidth, endWidth, repeat]);
-
-    useEffect(() => {
-      if (state === "paused") {
-        if (intervalId) {
-          clearInterval(intervalId);
-          setIntervalId(null);
-        }
-      } else if (state === "playing") {
-        if (!intervalId) {
-          const id = setInterval(increaseCurrentWidth, delay);
-          setIntervalId(id);
-        }
-      }
-      return () => {
-        if (intervalId) clearInterval(intervalId);
-      };
-    }, [state]);
+    }, [currentWidth, state, repeat]);
 
     return <div style={{ width: `${currentWidth}px` }}>{story}</div>;
   },
 });
 
-// todo: repeat: true/false --> wenn angekommen, von vorne starten!
 // todo: step default 10
 // todo: pace/speed default 500ms
 // todo: show current width in the tab

@@ -24,6 +24,7 @@ const preview: ProjectAnnotations<Renderer> = {
       state: "paused",
       startWidth: 150,
       endWidth: 1200,
+      currentWidth: 150,
       step: 100,
       delay: 500,
       repeat: true,
