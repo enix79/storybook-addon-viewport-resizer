@@ -20,7 +20,7 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
         state: "playing",
       },
     });
-  }, []);
+  }, [globals]);
 
   const onPause = useCallback(() => {
     setGlobals({
@@ -29,7 +29,7 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
         state: "paused",
       },
     });
-  }, []);
+  }, [globals]);
 
   const onReset = useCallback(() => {
     setGlobals({
@@ -38,7 +38,21 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
         currentWidth: 150,
       },
     });
-  }, []);
+  }, [globals]);
+
+  const toggleRepeat = useCallback(
+    (newValue: boolean) => {
+      console.log({ newValue });
+      console.log(globals[KEY]);
+      setGlobals({
+        [KEY]: {
+          ...globals[KEY],
+          repeat: newValue,
+        },
+      });
+    },
+    [globals],
+  );
 
   return (
     <AddonPanel {...props}>
@@ -56,7 +70,11 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
       </label>
       <label>
         Repeat
-        <input type="checkbox" value={repeat} />
+        <input
+          type="checkbox"
+          checked={repeat}
+          onChange={(event) => toggleRepeat(event.target.checked)}
+        />
       </label>
     </AddonPanel>
   );

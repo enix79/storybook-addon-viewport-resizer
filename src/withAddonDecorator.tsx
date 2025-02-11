@@ -57,10 +57,6 @@ export const withAddonDecorator = makeDecorator({
       };
     }, [state]);
 
-    // useEffect(() => {
-    //   setCurrentWidth(startWidth);
-    // }, [startWidth]);
-
     return <div style={{ width: `${currentWidth}px` }}>{story}</div>;
   },
 });
