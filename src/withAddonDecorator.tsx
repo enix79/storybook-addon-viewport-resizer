@@ -53,12 +53,10 @@ export const withAddonDecorator = makeDecorator({
         }
         return () => clearTimeout(timeoutId);
       }
-    }, [currentWidth, state, repeat]);
+    }, [addonGlobals]);
 
     return <div style={{ width: `${currentWidth}px` }}>{story}</div>;
   },
 });
 
-// todo: step default 10
-// todo: pace/speed default 500ms
-// todo: show current width in the tab
+// todo: reset settings
