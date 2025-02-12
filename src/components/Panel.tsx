@@ -1,13 +1,30 @@
 import React, { FC, FormEvent, memo, useCallback } from "react";
 
-import { AddonPanel } from "storybook/internal/components";
+import { AddonPanel, Button } from "storybook/internal/components";
 import { useGlobals } from "storybook/internal/manager-api";
 
+import { PlayIcon, StopIcon, RefreshIcon } from "@storybook/icons";
+
 import { KEY } from "../constants";
+import { styled } from "storybook/internal/theming";
+import Checkbox from "./Checkbox";
 
 interface PanelProps {
   active: boolean;
 }
+
+export const ControlsSection = styled("section")({
+  padding: 8,
+});
+
+export const ControlsList = styled("ul")({
+  listStyle: "none",
+  padding: 0,
+  margin: 0,
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+});
 
 export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
   const [globals, setGlobals] = useGlobals();
@@ -74,20 +91,25 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
 
   return (
     <AddonPanel {...props}>
-      <section>
+      <ControlsSection>
         <h2>Controls</h2>
-        <button onClick={onPlay}>Play</button>
-        <button onClick={onPause}>Pause</button>
-        <button onClick={onReset}>Reset width</button>
-        <label>
-          Repeat
-          <input
-            type="checkbox"
+        <ControlsList>
+          <Button onClick={onPlay}>
+            <PlayIcon /> Play
+          </Button>
+          <Button onClick={onPause}>
+            <StopIcon /> Pause
+          </Button>
+          <Button onClick={onReset}>
+            <RefreshIcon /> Reset
+          </Button>
+          <Checkbox
+            label="Repeat"
             checked={repeat}
             onChange={(event) => toggleRepeat(event.target.checked)}
           />
-        </label>
-      </section>
+        </ControlsList>
+      </ControlsSection>
       <section>
         <h2>Monitoring</h2>
         <label>
