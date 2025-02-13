@@ -1,30 +1,14 @@
 import React, { FC, FormEvent, memo, useCallback } from "react";
 
-import { AddonPanel, Button } from "storybook/internal/components";
+import { AddonPanel } from "storybook/internal/components";
 import { useGlobals } from "storybook/internal/manager-api";
-
-import { PlayIcon, StopIcon, RefreshIcon } from "@storybook/icons";
+import ControlsSection from "./ControlsSection";
 
 import { KEY } from "../constants";
-import { styled } from "storybook/internal/theming";
-import Checkbox from "./Checkbox";
 
 interface PanelProps {
   active: boolean;
 }
-
-export const ControlsSection = styled("section")({
-  padding: 8,
-});
-
-export const ControlsList = styled("ul")({
-  listStyle: "none",
-  padding: 0,
-  margin: 0,
-  display: "flex",
-  alignItems: "center",
-  gap: 8,
-});
 
 export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
   const [globals, setGlobals] = useGlobals();
@@ -59,7 +43,7 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
     });
   }, [globals]);
 
-  const toggleRepeat = useCallback(
+  const onToggleRepeat = useCallback(
     (newValue: boolean) => {
       setGlobals({
         [KEY]: {
@@ -91,25 +75,13 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
 
   return (
     <AddonPanel {...props}>
-      <ControlsSection>
-        <h2>Controls</h2>
-        <ControlsList>
-          <Button onClick={onPlay}>
-            <PlayIcon /> Play
-          </Button>
-          <Button onClick={onPause}>
-            <StopIcon /> Pause
-          </Button>
-          <Button onClick={onReset}>
-            <RefreshIcon /> Reset
-          </Button>
-          <Checkbox
-            label="Repeat"
-            checked={repeat}
-            onChange={(event) => toggleRepeat(event.target.checked)}
-          />
-        </ControlsList>
-      </ControlsSection>
+      <ControlsSection
+        onPlay={onPlay}
+        onPause={onPause}
+        onReset={onReset}
+        onToggleRepeat={onToggleRepeat}
+        repeat={repeat}
+      />
       <section>
         <h2>Monitoring</h2>
         <label>

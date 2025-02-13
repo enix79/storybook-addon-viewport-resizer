@@ -58,5 +58,3 @@ export const withAddonDecorator = makeDecorator({
     return <div style={{ width: `${currentWidth}px` }}>{story}</div>;
   },
 });
-
-// todo: reset settings
