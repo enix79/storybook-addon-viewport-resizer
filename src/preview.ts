@@ -19,17 +19,6 @@ import { withAddonDecorator } from "./withAddonDecorator";
 
 const preview: ProjectAnnotations<Renderer> = {
   decorators: [withAddonDecorator],
-  initialGlobals: {
-    [KEY]: {
-      state: "paused",
-      startWidth: 150,
-      endWidth: 1200,
-      currentWidth: 150,
-      step: 100,
-      delay: 500,
-      repeat: true,
-    },
-  },
 };
 
 export default preview;

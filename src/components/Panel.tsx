@@ -1,59 +1,85 @@
-import React, { FC, FormEvent, memo, useCallback } from "react";
+import React, { FC, FormEvent, memo, useEffect } from "react";
 
 import { AddonPanel } from "storybook/internal/components";
-import { useGlobals } from "storybook/internal/manager-api";
+import {
+  useStorybookState,
+  useAddonState,
+  useChannel,
+} from "storybook/internal/manager-api";
 import ControlsSection from "./ControlsSection";
 
-import { KEY } from "../constants";
+import { ADDON_ID, KEY, EVENTS } from "../constants";
+import { AddonState } from "src/types";
 
 interface PanelProps {
   active: boolean;
 }
 
 export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
-  const [globals, setGlobals] = useGlobals();
-  console.log("globals", globals[KEY]);
-  const { startWidth, endWidth, currentWidth, step, delay, repeat } =
-    globals[KEY];
+  const initialState: AddonState = {
+    state: "paused",
+    startWidth: 150,
+    endWidth: 1200,
+    currentWidth: 150,
+    step: 100,
+    delay: 500,
+    repeat: true,
+  };
+  const [addonState, setAddonState] = useAddonState(ADDON_ID, initialState);
+  const { state, startWidth, endWidth, currentWidth, step, delay, repeat } =
+    addonState;
 
-  const onPlay = useCallback(() => {
-    setGlobals({
-      [KEY]: {
-        ...globals[KEY],
-        state: "playing",
-      },
-    });
-  }, [globals]);
+  const emit = useChannel({
+    UPDATE_WIDTH: () => null,
+  });
 
-  const onPause = useCallback(() => {
-    setGlobals({
-      [KEY]: {
-        ...globals[KEY],
-        state: "paused",
-      },
-    });
-  }, [globals]);
+  const path = useStorybookState().path;
 
-  const onReset = useCallback(() => {
-    setGlobals({
-      [KEY]: {
-        ...globals[KEY],
-        currentWidth: globals[KEY].startWidth,
-      },
-    });
-  }, [globals]);
+  useEffect(() => {
+    setAddonState(initialState);
+  }, [path]);
 
-  const onToggleRepeat = useCallback(
-    (newValue: boolean) => {
-      setGlobals({
-        [KEY]: {
-          ...globals[KEY],
-          repeat: newValue,
-        },
-      });
-    },
-    [globals],
-  );
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (state === "playing") {
+      if (currentWidth >= endWidth) {
+        if (repeat) {
+          setAddonState((prev) => ({ ...prev, currentWidth: startWidth }));
+          emit(EVENTS.UPDATE_WIDTH, startWidth);
+        } else {
+          setAddonState((prev) => ({ ...prev, state: "paused" }));
+        }
+      } else {
+        const incrementWidth = () =>
+          setAddonState((prev) => ({
+            ...prev,
+            currentWidth: currentWidth + step,
+          }));
+        emit(EVENTS.UPDATE_WIDTH, currentWidth + step);
+        timeoutId = setTimeout(incrementWidth, delay);
+      }
+      return () => clearTimeout(timeoutId);
+    }
+  }, [state, currentWidth, startWidth, endWidth, repeat, delay, step]);
+
+  const onPlay = () => {
+    if (state === "playing") return;
+    setAddonState((prev) => ({ ...prev, state: "playing" }));
+  };
+
+  const onPause = () => {
+    if (state === "paused") return;
+    setAddonState((prev) => ({ ...prev, state: "paused" }));
+  };
+
+  const onReset = () => {
+    setAddonState((prev) => ({ ...prev, currentWidth: startWidth }));
+    emit(EVENTS.UPDATE_WIDTH, startWidth);
+  };
+
+  const onToggleRepeat = () => {
+    setAddonState((prev) => ({ ...prev, repeat: !prev.repeat }));
+  };
 
   const onSubmitSettings = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -65,12 +91,7 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
       step: Number(formData.get("step")),
       delay: Number(formData.get("delay")),
     };
-    setGlobals({
-      [KEY]: {
-        ...globals[KEY],
-        ...newSettings,
-      },
-    });
+    setAddonState((prev) => ({ ...prev, ...newSettings }));
   };
 
   return (
@@ -115,3 +136,6 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
     </AddonPanel>
   );
 });
+
+// const params = useParameter("test", "test");
+// console.log(params);
