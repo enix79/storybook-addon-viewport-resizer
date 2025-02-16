@@ -51,7 +51,7 @@
     "@storybook/addon-links": "0.0.0-pr-26654-sha-49d01553",
     "@storybook/blocks": "0.0.0-pr-26654-sha-49d01553",
     "@storybook/react": "0.0.0-pr-26654-sha-49d01553",
-    "@storybook/react-vite": "0.0.0-pr-26654-sha-49d01553",
+    "@storybook/react-vite": "8.5.6",
     "@storybook/test": "0.0.0-pr-26654-sha-49d01553",
     "@types/node": "^18.15.0",
     "@types/react": "^18.2.65",
