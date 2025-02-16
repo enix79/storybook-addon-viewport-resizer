@@ -49,7 +49,7 @@
     "@storybook/addon-essentials": "0.0.0-pr-26654-sha-49d01553",
     "@storybook/addon-interactions": "0.0.0-pr-26654-sha-49d01553",
     "@storybook/addon-links": "0.0.0-pr-26654-sha-49d01553",
-    "@storybook/blocks": "0.0.0-pr-26654-sha-49d01553",
+    "@storybook/blocks": "8.5.6",
     "@storybook/react": "0.0.0-pr-26654-sha-49d01553",
     "@storybook/react-vite": "0.0.0-pr-26654-sha-49d01553",
     "@storybook/test": "0.0.0-pr-26654-sha-49d01553",
