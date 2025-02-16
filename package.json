@@ -52,7 +52,7 @@
     "@storybook/blocks": "0.0.0-pr-26654-sha-49d01553",
     "@storybook/react": "0.0.0-pr-26654-sha-49d01553",
     "@storybook/react-vite": "0.0.0-pr-26654-sha-49d01553",
-    "@storybook/test": "0.0.0-pr-26654-sha-49d01553",
+    "@storybook/test": "8.5.6",
     "@types/node": "^18.15.0",
     "@types/react": "^18.2.65",
     "@types/react-dom": "^18.2.21",
