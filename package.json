@@ -38,11 +38,9 @@
     "build:watch": "npm run build -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "run-p build:watch \"storybook --quiet\"",
-    "prerelease": "zx scripts/prepublish-checks.js",
-    "release": "npm run build && auto shipit",
-    "eject-ts": "zx scripts/eject-typescript.js",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test-semver": "npx semantic-release -dp"
   },
   "dependencies": {
     "@storybook/icons": "^1.2.10"
@@ -67,11 +65,11 @@
     "prompts": "^2.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "semantic-release": "^24.2.3",
     "storybook": "0.0.0-pr-26654-sha-49d01553",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
-    "vite": "^5.3.5",
-    "zx": "^7.2.3"
+    "vite": "^5.3.5"
   },
   "peerDependencies": {
     "storybook": "^8.3.0 || 0.0.0-pr-26654-sha-49d01553"

@@ -1,28 +1,37 @@
 name: Release
+on:
+  workflow_dispatch:
 
-on: [push]
+permissions:
+  contents: read # for checkout
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Prepare repository
-        run: git fetch --unshallow --tags
-
-      - name: Use Node.js 18.x
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
-
+          node-version: "lts/*"
       - name: Install dependencies
-        run: npm install --ignore-scripts
-
-      - name: Create Release
+        run: npm clean-install
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
+      - name: Build the package
+        run: npm run build
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm run release
+        run: npx semantic-release

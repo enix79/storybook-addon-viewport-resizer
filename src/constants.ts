@@ -5,6 +5,5 @@ export const TAB_ID = `${ADDON_ID}/tab`;
 export const KEY = `viewport-resizer`;
 
 export const EVENTS = {
-  PLAY: `${ADDON_ID}/play`,
-  PAUSE: `${ADDON_ID}/pause`,
+  UPDATE_WIDTH: `${ADDON_ID}/update-width`,
 };
