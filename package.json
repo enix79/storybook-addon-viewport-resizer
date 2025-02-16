@@ -4,7 +4,9 @@
   "description": "An addon for testing responsive designs",
   "keywords": [
     "storybook-addons",
-    "storybook-addons"
+    "viewport",
+    "responsive",
+    "design"
   ],
   "repository": {
     "type": "git",
