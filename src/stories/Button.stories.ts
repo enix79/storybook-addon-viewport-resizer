@@ -12,11 +12,10 @@ const meta: Meta<typeof Button> = {
   },
   tags: ["autodocs"],
   parameters: {
-    myAddonParameter: `
-<MyComponent boolProp scalarProp={1} complexProp={{ foo: 1, bar: '2' }}>
-  <SomeOtherComponent funcProp={(a) => a.id} />
-</MyComponent>
-`,
+    "viewport-resizer-start-width": 500,
+    "viewport-resizer-end-width": 1500,
+    "viewport-resizer-step": 50,
+    "viewport-resizer-delay": 500,
   },
 };
 

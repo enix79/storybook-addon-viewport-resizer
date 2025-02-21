@@ -7,3 +7,5 @@ export interface AddonState {
   delay: number;
   repeat: boolean;
 }
+
+export type CustomerDefaultState = Omit<AddonState, "state" | "currentWidth">;

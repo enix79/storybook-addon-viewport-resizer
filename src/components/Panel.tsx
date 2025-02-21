@@ -1,14 +1,11 @@
-import React, { FC, FormEvent, memo, useEffect } from "react";
+import React, { FC, FormEvent, memo, useEffect, useState } from "react";
 
 import { AddonPanel } from "storybook/internal/components";
-import {
-  useStorybookState,
-  useAddonState,
-  useChannel,
-} from "storybook/internal/manager-api";
+import { useStorybookState, useAddonState, useChannel, useStorybookApi } from "storybook/internal/manager-api";
 import ControlsSection from "./ControlsSection";
 
-import { ADDON_ID, KEY, EVENTS } from "../constants";
+import { ADDON_ID, EVENTS, PARAMETER_KEYS } from "../constants";
+import { DEFAULT_STATE } from "../defaults";
 import { AddonState } from "src/types";
 
 interface PanelProps {
@@ -16,27 +13,61 @@ interface PanelProps {
 }
 
 export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
-  const initialState: AddonState = {
-    state: "paused",
-    startWidth: 150,
-    endWidth: 1200,
-    currentWidth: 150,
-    step: 100,
-    delay: 500,
-    repeat: true,
-  };
-  const [addonState, setAddonState] = useAddonState(ADDON_ID, initialState);
-  const { state, startWidth, endWidth, currentWidth, step, delay, repeat } =
-    addonState;
+  if (!props.active) return null;
 
-  const emit = useChannel({
-    UPDATE_WIDTH: () => null,
-  });
+  const [addonState, setAddonState] = useAddonState<AddonState>(ADDON_ID, DEFAULT_STATE);
+  const { state, startWidth, endWidth, currentWidth, step, delay, repeat } = addonState;
 
+  const [inputStartWidth, setInputStartWidth] = useState<number>(startWidth);
+  const [inputEndWidth, setInputEndWidth] = useState<number>(endWidth);
+  const [inputStep, setInputStep] = useState<number>(step);
+  const [inputDelay, setInputDelay] = useState<number>(delay);
+
+  const onInputStartWidthChange = (event: FormEvent<HTMLInputElement>) => setInputStartWidth(Number(event.currentTarget.value));
+  const onInputEndWidthChange = (event: FormEvent<HTMLInputElement>) => setInputEndWidth(Number(event.currentTarget.value));
+  const onInputStepChange = (event: FormEvent<HTMLInputElement>) => setInputStep(Number(event.currentTarget.value));
+  const onInputDelayChange = (event: FormEvent<HTMLInputElement>) => setInputDelay(Number(event.currentTarget.value));
+
+  const emit = useChannel({ UPDATE_WIDTH: () => null });
   const path = useStorybookState().path;
 
+  const api = useStorybookApi();
+  const paramStartWidth = api.getCurrentParameter<number>(PARAMETER_KEYS.START_WIDTH);
+  const paramEndWidth = api.getCurrentParameter<number>(PARAMETER_KEYS.END_WIDTH);
+  const paramStep = api.getCurrentParameter<number>(PARAMETER_KEYS.STEP);
+  const paramDelay = api.getCurrentParameter<number>(PARAMETER_KEYS.DELAY);
+  console.log(paramStartWidth, paramEndWidth, paramStep, paramDelay);
+
   useEffect(() => {
-    setAddonState(initialState);
+    if (paramStartWidth && !isNaN(paramStartWidth)) {
+      setAddonState((prev) => ({ ...prev, startWidth: Number(paramStartWidth) }));
+      setInputStartWidth(Number(paramStartWidth));
+    }
+  }, [paramStartWidth]);
+
+  useEffect(() => {
+    if (paramEndWidth && !isNaN(paramEndWidth)) {
+      setAddonState((prev) => ({ ...prev, endWidth: Number(paramEndWidth) }));
+      setInputEndWidth(Number(paramEndWidth));
+    }
+  }, [paramEndWidth]);
+
+  useEffect(() => {
+    if (paramStep && !isNaN(paramStep)) {
+      setAddonState((prev) => ({ ...prev, step: Number(paramStep) }));
+      setInputStep(Number(paramStep));
+    }
+  }, [paramStep]);
+
+  useEffect(() => {
+    if (paramDelay && !isNaN(paramDelay)) {
+      setAddonState((prev) => ({ ...prev, delay: Number(paramDelay) }));
+      setInputDelay(Number(paramDelay));
+    }
+  }, [paramDelay]);
+
+  useEffect(() => {
+    setAddonState(DEFAULT_STATE);
   }, [path]);
 
   useEffect(() => {
@@ -83,26 +114,18 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
 
   const onSubmitSettings = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    const newSettings = {
-      startWidth: Number(formData.get("startWidth")),
-      endWidth: Number(formData.get("endWidth")),
-      step: Number(formData.get("step")),
-      delay: Number(formData.get("delay")),
-    };
-    setAddonState((prev) => ({ ...prev, ...newSettings }));
+    setAddonState((prev) => ({
+      ...prev,
+      startWidth: inputStartWidth,
+      endWidth: inputEndWidth,
+      step: inputStep,
+      delay: inputDelay,
+    }));
   };
 
   return (
     <AddonPanel {...props}>
-      <ControlsSection
-        onPlay={onPlay}
-        onPause={onPause}
-        onReset={onReset}
-        onToggleRepeat={onToggleRepeat}
-        repeat={repeat}
-      />
+      <ControlsSection onPlay={onPlay} onPause={onPause} onReset={onReset} onToggleRepeat={onToggleRepeat} repeat={repeat} />
       <section>
         <h2>Monitoring</h2>
         <label>
@@ -115,20 +138,20 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
         <form onSubmit={onSubmitSettings}>
           <label>
             Start width
-            <input type="text" name="startWidth" defaultValue={startWidth} />
+            <input type="text" name="startWidth" value={inputStartWidth} onChange={onInputStartWidthChange} />
           </label>
           <label>
             End width
-            <input type="text" name="endWidth" defaultValue={endWidth} />
+            <input type="text" name="endWidth" value={inputEndWidth} onChange={onInputEndWidthChange} />
           </label>
 
           <label>
             Step
-            <input type="text" name="step" defaultValue={step} />
+            <input type="text" name="step" value={inputStep} onChange={onInputStepChange} />
           </label>
           <label>
             Delay
-            <input type="text" name="delay" defaultValue={delay} />
+            <input type="text" name="delay" value={inputDelay} onChange={onInputDelayChange} />
           </label>
           <button type="submit">Apply</button>
         </form>
@@ -136,6 +159,3 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
     </AddonPanel>
   );
 });
-
-// const params = useParameter("test", "test");
-// console.log(params);

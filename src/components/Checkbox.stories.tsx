@@ -10,6 +10,12 @@ const meta: Meta<CheckboxProps> = {
     checked: true,
     onChange: () => console.log("onChange"),
   },
+  parameters: {
+    "viewport-resizer-start-width": 300,
+    "viewport-resizer-end-width": 1300,
+    "viewport-resizer-step": 30,
+    "viewport-resizer-delay": 300,
+  },
 };
 
 export default meta;
