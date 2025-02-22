@@ -36,7 +36,15 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
   const paramEndWidth = api.getCurrentParameter<number>(PARAMETER_KEYS.END_WIDTH);
   const paramStep = api.getCurrentParameter<number>(PARAMETER_KEYS.STEP);
   const paramDelay = api.getCurrentParameter<number>(PARAMETER_KEYS.DELAY);
-  console.log(paramStartWidth, paramEndWidth, paramStep, paramDelay);
+
+  useEffect(() => {
+    const iframe = document.querySelector("#storybook-preview-iframe") as HTMLElement;
+    // TODO: How to unset the width, when the panel is not active?
+    // TODO: How to integrate with the viewport addon?
+    if (iframe) {
+      iframe.style.width = `${currentWidth}px`;
+    }
+  }, [currentWidth, props.active]);
 
   useEffect(() => {
     if (paramStartWidth && !isNaN(paramStartWidth)) {
