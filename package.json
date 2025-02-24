@@ -57,7 +57,7 @@
     "@storybook/test": "0.0.0-pr-26654-sha-49d01553",
     "@types/node": "^18.15.0",
     "@types/react": "^18.2.65",
-    "@types/react-dom": "^18.2.21",
+    "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.2.1",
     "npm-run-all2": "^7.0.2",
     "prettier": "^3.3.3",
