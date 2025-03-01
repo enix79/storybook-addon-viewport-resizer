@@ -5,7 +5,9 @@ import { PlayIcon, StopIcon, RefreshIcon } from "@storybook/icons";
 import Checkbox from "./Checkbox";
 
 export const StyledSection = styled("section")({
-  padding: 8,
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
 });
 
 export const ControlsList = styled("ul")({
@@ -25,13 +27,7 @@ export interface ControlsSectionProps {
   repeat: boolean;
 }
 
-const ControlsSection: FC<ControlsSectionProps> = ({
-  onPlay,
-  onPause,
-  onReset,
-  onToggleRepeat,
-  repeat,
-}) => {
+const ControlsSection: FC<ControlsSectionProps> = ({ onPlay, onPause, onReset, onToggleRepeat, repeat }) => {
   return (
     <StyledSection>
       <h2>Controls</h2>
@@ -45,11 +41,7 @@ const ControlsSection: FC<ControlsSectionProps> = ({
         <Button onClick={onReset} size="small">
           <RefreshIcon /> Reset
         </Button>
-        <Checkbox
-          label="Repeat"
-          checked={repeat}
-          onChange={(event) => onToggleRepeat(event.target.checked)}
-        />
+        <Checkbox label="Repeat" checked={repeat} onChange={(event) => onToggleRepeat(event.target.checked)} />
       </ControlsList>
     </StyledSection>
   );

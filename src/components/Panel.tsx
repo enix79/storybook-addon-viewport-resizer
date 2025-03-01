@@ -1,12 +1,15 @@
 import React, { FC, FormEvent, memo, useEffect, useState } from "react";
 
-import { AddonPanel } from "storybook/internal/components";
+import { AddonPanel, Form, P } from "storybook/internal/components";
 import { useStorybookState, useAddonState, useChannel, useStorybookApi } from "storybook/internal/manager-api";
 import ControlsSection from "./ControlsSection";
 
 import { ADDON_ID, EVENTS, PARAMETER_KEYS } from "../constants";
 import { DEFAULT_STATE } from "../defaults";
 import { AddonState } from "src/types";
+
+import { styled } from "storybook/internal/theming";
+import { StyledSection } from "./ControlsSection";
 
 interface PanelProps {
   active: boolean;
@@ -133,37 +136,69 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
 
   return (
     <AddonPanel {...props}>
-      <ControlsSection onPlay={onPlay} onPause={onPause} onReset={onReset} onToggleRepeat={onToggleRepeat} repeat={repeat} />
-      <section>
-        <h2>Monitoring</h2>
-        <label>
-          Current width
-          <input type="text" value={currentWidth} readOnly />
-        </label>
-      </section>
-      <section>
-        <h2>Settings</h2>
-        <form onSubmit={onSubmitSettings}>
-          <label>
-            Start width
-            <input type="text" name="startWidth" value={inputStartWidth} onChange={onInputStartWidthChange} />
-          </label>
-          <label>
-            End width
-            <input type="text" name="endWidth" value={inputEndWidth} onChange={onInputEndWidthChange} />
-          </label>
-
-          <label>
-            Step
-            <input type="text" name="step" value={inputStep} onChange={onInputStepChange} />
-          </label>
-          <label>
-            Delay
-            <input type="text" name="delay" value={inputDelay} onChange={onInputDelayChange} />
-          </label>
-          <button type="submit">Apply</button>
-        </form>
-      </section>
+      <PanelWrapper>
+        <StyledSection>
+          <h2>Monitoring</h2>
+          <P style={{ marginBlock: "0px", paddingBlock: "2px", minWidth: "150px" }}>{`Current width: ${currentWidth}px`}</P>
+        </StyledSection>
+        <ControlsSection onPlay={onPlay} onPause={onPause} onReset={onReset} onToggleRepeat={onToggleRepeat} repeat={repeat} />
+        <StyledSection>
+          <h2>Settings</h2>
+          <SettingsForm onSubmit={onSubmitSettings}>
+            <Label>
+              <LabelContent>Start Width</LabelContent>
+              <Form.Input
+                type="text"
+                name="startWidth"
+                value={inputStartWidth}
+                onChange={onInputStartWidthChange}
+                style={{ width: "60px" }}
+              />
+            </Label>
+            <Label>
+              <LabelContent>End Width</LabelContent>
+              <Form.Input type="text" name="endWidth" value={inputEndWidth} onChange={onInputEndWidthChange} style={{ width: "60px" }} />
+            </Label>
+            <Label>
+              <LabelContent>Step</LabelContent>
+              <Form.Input type="text" name="step" value={inputStep} onChange={onInputStepChange} style={{ width: "60px" }} />
+            </Label>
+            <Label>
+              <LabelContent>Delay</LabelContent>
+              <Form.Input type="text" name="delay" value={inputDelay} onChange={onInputDelayChange} style={{ width: "60px" }} />
+            </Label>
+            <Form.Button type="submit" size="medium" variant="solid" padding="medium" style={{ padding: "8px 40px" }}>
+              Apply
+            </Form.Button>
+          </SettingsForm>
+        </StyledSection>
+      </PanelWrapper>
     </AddonPanel>
   );
 });
+
+const Label = styled.label(({ theme }) => ({
+  fontWeight: theme.typography.weight.bold,
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  lineHeight: "16px",
+  gap: 8,
+}));
+
+const SettingsForm = styled.form(() => ({
+  display: "flex",
+  columnGap: 16,
+  rowGap: 12,
+  flexWrap: "wrap",
+}));
+
+const LabelContent = styled.span(() => ({}));
+
+const PanelWrapper = styled.div(() => ({
+  padding: 12,
+  display: "flex",
+  flexWrap: "wrap",
+  columnGap: 32,
+  rowGap: 20,
+}));
