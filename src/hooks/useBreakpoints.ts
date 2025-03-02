@@ -8,7 +8,6 @@ const useBreakpoints = (currentWidth: number) => {
     const bpArray = Object.entries(breakpoints);
     const bpAmount = bpArray.length;
     for (let i = bpAmount - 1; i >= 0; i--) {
-      console.log(i);
       const bpLowerBoundary = bpArray[i][1] as number;
       if (currentWidth >= bpLowerBoundary) {
         currentBreakpoint = bpArray[i][0];
