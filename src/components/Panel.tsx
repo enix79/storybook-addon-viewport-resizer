@@ -1,7 +1,7 @@
 import React, { FC, FormEvent, memo, useEffect, useState } from "react";
 
 import { AddonPanel, Form, P } from "storybook/internal/components";
-import { useStorybookState, useAddonState, useChannel, useStorybookApi } from "storybook/internal/manager-api";
+import { useStorybookState, useAddonState, useChannel, useStorybookApi, useGlobals } from "storybook/internal/manager-api";
 import ControlsSection from "./ControlsSection";
 
 import { ADDON_ID, EVENTS, PARAMETER_KEYS } from "../constants";
@@ -10,6 +10,7 @@ import { AddonState } from "src/types";
 
 import { styled } from "storybook/internal/theming";
 import { StyledSection } from "./ControlsSection";
+import useBreakpoints from "src/hooks/useBreakpoints";
 
 interface PanelProps {
   active: boolean;
@@ -81,6 +82,8 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
     setAddonState(DEFAULT_STATE);
   }, [path]);
 
+  const currentBreakpoint = useBreakpoints(currentWidth);
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (state === "playing") {
@@ -140,6 +143,9 @@ export const Panel: FC<PanelProps> = memo(function MyPanel(props) {
         <StyledSection>
           <h2>Monitoring</h2>
           <P style={{ marginBlock: "0px", paddingBlock: "2px", minWidth: "150px" }}>{`Current width: ${currentWidth}px`}</P>
+          {currentBreakpoint && (
+            <P style={{ marginBlock: "0px", paddingBlock: "2px", minWidth: "150px" }}>{`Current breakpoint: ${currentBreakpoint}`}</P>
+          )}
         </StyledSection>
         <ControlsSection onPlay={onPlay} onPause={onPause} onReset={onReset} onToggleRepeat={onToggleRepeat} repeat={repeat} />
         <StyledSection>
