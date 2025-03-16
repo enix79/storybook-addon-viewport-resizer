@@ -6,6 +6,40 @@ An addon for testing responsive designs.
 
 To enable both container **and** media queries, the iframe of the preview is resized, instead of a custom decorator.
 
+![Addon example video](./src/assets/addon_example.gif)
+
+## Description
+
+The addon is currently divded in three sections.
+
+### Monitoring
+
+<img src="./src/assets/addon_monitoring_section.png" alt="addon settings section" width="150"/>
+
+In the monitoring section, you can see the current width of the iframe, and - if configured - the current breakpoint name.
+
+### Controls
+
+<img src="./src/assets/addon_controls_section.png" alt="addon controls section" width="300"/>
+
+You can control the addon with some actions. They take immediate effect:
+
+- "Play" starts the addon. The current width is then increased by defined `Step` value after the period of time defined in `Delay`.
+- "Stop" stops the addon immediately at the current width.
+- "Reset" resets the addon to the value defined in `Start Width`.
+- If "Repeat" is toggled on, the iframe will rewind and continue from the start width in an infinite loop. If "Repeat" is toggled off, the iframe will stop growing once it reaches the `End Width`.
+
+### Settings
+
+<img src="./src/assets/addon_settings_section.png" alt="addon settings section" width="600"/>
+
+Settings further configure parameters of the addon. In comparison to controls, they only take effect, when you submit the changes via the button.
+
+- "Start Width" is the minimum width and it's from where the iframe will start or continue (after rewind) to grow.
+- "End Width" ist the maximum width, that iframe can take.
+- "Step" is the incremental step of grow in pixels.
+- "Delay" is the amount of time in miliseconds after which the iframe will increment its width.
+
 ## Installation
 
 You can install this addon by simply running `npm i -D storybook-addon-viewport-resizer`.

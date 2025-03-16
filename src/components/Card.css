@@ -1,0 +1,94 @@
+.card-container {
+  max-width: 24rem; /* max-w-sm */
+  width: 100%; /* w-full */
+  display: flex; /* lg:flex */
+  flex-direction: column; /* Standard Layout */
+}
+
+.card-image {
+  height: 12rem; /* h-48 */
+  background-image: url("/img/card-left.jpg");
+  background-size: cover;
+  border-top-left-radius: 0.5rem; /* rounded-t */
+  border-top-right-radius: 0.5rem; /* rounded-t */
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .card-container {
+    flex-direction: row; /* lg:flex */
+  }
+  .card-image {
+    height: auto; /* lg:h-auto */
+    width: 12rem; /* lg:w-48 */
+    border-top-left-radius: 0; /* lg:rounded-t-none */
+    border-bottom-left-radius: 0.5rem; /* lg:rounded-l */
+  }
+}
+
+.card-content {
+  border: 1px solid #cbd5e1; /* border-gray-400 */
+  background-color: white; /* bg-white */
+  border-bottom-left-radius: 0.5rem; /* rounded-b */
+  border-bottom-right-radius: 0.5rem; /* rounded-b */
+  padding: 1rem; /* p-4 */
+  display: flex;
+  flex-direction: column; /* flex-col */
+  justify-content: space-between; /* justify-between */
+  line-height: 1.5; /* leading-normal */
+}
+
+.card-description {
+  margin-bottom: 2rem; /* mb-8 */
+}
+
+.card-tag {
+  font-size: 0.875rem; /* text-sm */
+  color: #4b5563; /* text-gray-600 */
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+}
+
+.icon {
+  fill: #6b7280; /* fill-current text-gray-500 */
+  width: 0.75rem; /* w-3 */
+  height: 0.75rem; /* h-3 */
+  margin-right: 0.5rem; /* mr-2 */
+}
+
+.card-title {
+  color: #1f2937; /* text-gray-900 */
+  font-weight: bold; /* font-bold */
+  font-size: 1.25rem; /* text-xl */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.card-text {
+  color: #374151; /* text-gray-700 */
+  font-size: 1rem; /* text-base */
+}
+
+.card-author {
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+}
+
+.author-avatar {
+  width: 2.5rem; /* w-10 */
+  height: 2.5rem; /* h-10 */
+  border-radius: 50%; /* rounded-full */
+  margin-right: 1rem; /* mr-4 */
+}
+
+.author-info {
+  font-size: 0.875rem; /* text-sm */
+}
+
+.author-name {
+  color: #1f2937; /* text-gray-900 */
+  line-height: 1; /* leading-none */
+}
+
+.author-date {
+  color: #4b5563; /* text-gray-600 */
+}
